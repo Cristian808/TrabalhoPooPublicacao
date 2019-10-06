@@ -24,9 +24,9 @@ public class Publicacao {
         livroTop.setAltura(1);
         livroTop.setAutor(null);
         livroTop.setDescricao("abamnkf mkdamdkas0");
-        livroTop.setIsbn("123123123");
+        livroTop.setIsbnDez(1234567891);
         livroTop.setLargura(1);
-        livroTop.setNome("Livro dos machos");
+        livroTop.setNome("Livro fisico top");
         livroTop.setPaginas(1);
         livroTop.setPeso(12);
         livroTop.setValor(123);
@@ -36,12 +36,11 @@ public class Publicacao {
         autor.setEscolaLiteraria("Romantismo");
         autor.setAnoNascimento(1875);
         LivroEletronico livroTop1= new LivroEletronico();
-        livroTop1.setAsin("1");
         livroTop1.setAutor(autor);
         livroTop1.setDescricao("abamnkf mkdamdkas0");
-        livroTop1.setIsbn("123123123");
+        livroTop1.setIsbnTreze(Long.parseLong("1236549874563"));
         livroTop1.setAudioBook(false);
-        livroTop1.setNome("Livro dos homi");
+        livroTop1.setNome("Livro eletronico top");
         livroTop1.setPaginas(1);
         livroTop1.setTamanhoMb(12);
         livroTop1.setValor(123);
@@ -58,6 +57,7 @@ public class Publicacao {
             System.out.println("Para sair digite qualquer numero");
             mostrarMenu= scan.nextInt()==1 ? true : false;
         }
+        scan.close();
         System.exit(0);
     }
 
@@ -67,9 +67,8 @@ public class Publicacao {
         System.out.println(dataBR.format(new Date()));
         System.out.println("1 - Registrar livros");
         System.out.println("2 - Listar livros");
-        // System.out.println(" 4- List Authors.");
-        // System.out.println(" 5- Readjust book price.");
-        System.out.println("6- Sair do programa");
+        System.out.println("3 - Reajustar valor livro");
+        System.out.println("4 - Sair do programa");
         System.out.println("//////////");
     }
 
@@ -84,16 +83,14 @@ public class Publicacao {
                 certo=true;
                 break;
             case 2: 
-                listarLivros();
+                listarLivrosComDetalhes();
                 certo=true;
                 break;
-            // case 4:
-            //     readjustPrice();
-            //     break;
-            // case 5:
-            //     authorRegistration();
-            //     break;
-            case 6:
+            case 3:
+                reajusteValor();
+                certo=true;
+                break;
+            case 4:
                 scan.close();
                 System.exit(0);
                 break;
@@ -104,6 +101,61 @@ public class Publicacao {
             }
         }
         System.out.println();
+    }
+
+    static void reajusteValor(){
+        int lista=0;
+        int indiceLivro;
+        while ((lista != 1 || (lista == 1 && listaLivrosFisicos.size() == 0))
+                && (lista != 2 || (lista == 2 && listaLivrosEletronicos.size() == 0))) {
+            System.out.println(
+                    "Deseja reajustar o valor do livro de qual lista?(Livros fisicos(1) Livros Eletronicos(2))");
+            listarLivros();
+            lista = scan.nextInt();
+            if ((lista != 1 || (lista == 1 && listaLivrosFisicos.size() == 0))
+                    && (lista != 2 || (lista == 2 && listaLivrosEletronicos.size() == 0))) {
+                System.out.println("Insira um numero valido!!!");
+            }
+        }
+        if(lista==1){
+            for(boolean valido=false; valido==false;){
+                System.out.println("Insira o indice do livro");
+                indiceLivro=scan.nextInt();
+                if(indiceLivro-1<listaLivrosFisicos.size()){
+                    valido=true;
+                    reajustarLivroFisico(listaLivrosFisicos.get(indiceLivro-1));
+                }
+            }
+        }else if(lista==2){
+            for(boolean valido=false; valido==false;){
+                System.out.println("Insira o indice do livro");
+                indiceLivro=scan.nextInt();
+                if(indiceLivro-1<listaLivrosEletronicos.size()){
+                    valido=true;
+                    reajustarLivroEletronico(listaLivrosEletronicos.get(indiceLivro-1));
+                }
+            }
+        }
+    }
+
+    static void reajustarLivroFisico(LivroFisico livro){
+        System.out.println("Insira o valor de reajuste:");
+        double reajuste=Double.parseDouble(scan.next());
+        if(livro.ajustarValor(reajuste)){
+            System.out.println("Reajustado!");
+        }else{
+            System.out.println("Reajuste maior que 30% negado!");
+        }
+    }
+
+    static void reajustarLivroEletronico(LivroEletronico livro){
+        System.out.println("Insira o valor de reajuste:");
+        double reajuste=Double.parseDouble(scan.next());
+        if(livro.ajustarValor(reajuste)){
+            System.out.println("Reajustado!");
+        }else{
+            System.out.println("Reajuste maior que 30% negado!");
+        }
     }
 
     static void registrarLivros(){
@@ -132,13 +184,17 @@ public class Publicacao {
         }
     }
 
+    static void listarLivrosComDetalhes(){
+        listarLivros();
+        if(listaLivrosFisicos.size()>0 || listaLivrosEletronicos.size()>0) livroDetalhe();
+    }
+
     static void listarLivros(){
         System.out.println("//////// Livros fisicos ////////");
         listarLivrosFIsicos();
         System.out.println("//////// Livros eletronicos ////////");
         listarLivrosEletronicos();
         System.out.println();
-        if(listaLivrosFisicos.size()>0 || listaLivrosEletronicos.size()>0) livroDetalhe();
     }
 
     
@@ -154,17 +210,29 @@ public class Publicacao {
         System.out.println("Insira a descricao:");
         scan.nextLine();
         livroFisico.setDescricao(scan.nextLine());
-        System.out.println("Insira o ISBN:");
-        livroFisico.setIsbn(scan.next());
+        System.out.println("Insira o ISBN (Caso nao possua digite 0):");
+        String isbn= scan.next();
+        if(isbn.length()==10){
+            livroFisico.setIsbnDez(Long.parseLong(isbn));
+            livroFisico.setIsbnTreze(0);
+
+        }
+        else if(isbn.length()==13){
+            livroFisico.setIsbnDez(0);
+            livroFisico.setIsbnTreze(Long.parseLong(isbn));
+        }else{
+            livroFisico.setIsbnDez(0);
+            livroFisico.setIsbnTreze(0);
+        }
         System.out.println("Insira a altura:");
-        livroFisico.setAltura(scan.nextDouble());
+        livroFisico.setAltura(Double.parseDouble(scan.next()));
         System.out.println("Insira a largura:");
-        livroFisico.setLargura(scan.nextDouble());
+        livroFisico.setLargura(Double.parseDouble(scan.next()));
         System.out.println("Insira o peso em kg:");
-        livroFisico.setPeso(scan.nextDouble());
+        livroFisico.setPeso(Double.parseDouble(scan.next()));
         System.out.println("Insira o valor:");
-        livroFisico.setValor(scan.nextDouble());
-        livroFisico.setAutor(cadastrarAutorLivro());
+        livroFisico.setValor(Double.parseDouble(scan.next()));
+        livroFisico.setAutor(possuiAutor());
 
         listaLivrosFisicos.add(livroFisico);
         System.out.println("//////////");
@@ -292,24 +360,33 @@ public class Publicacao {
         System.out.println("Insira a descricao:");
         scan.nextLine();
         livroEletronico.setDescricao(scan.nextLine());
-        System.out.println("Insira o ISBN:");
-        livroEletronico.setIsbn(scan.next());
-        System.out.println("Insira a ASIN:");
-        livroEletronico.setAsin(scan.next());
+        System.out.println("Insira o ISBN (Caso nao possua digite 0):");
+        String isbn= scan.next();
+        if(isbn.length()==10){
+            livroEletronico.setIsbnDez(Long.parseLong(isbn));
+            livroEletronico.setIsbnTreze(0);
+
+        }
+        else if(isbn.length()==13){
+            livroEletronico.setIsbnDez(0);
+            livroEletronico.setIsbnTreze(Long.parseLong(isbn));
+        }else{
+            livroEletronico.setIsbnDez(0);
+            livroEletronico.setIsbnTreze(0);
+        }
         System.out.println("Insira o tamanho em MB:");
-        livroEletronico.setTamanhoMb(scan.nextDouble());
+        livroEletronico.setTamanhoMb(Double.parseDouble(scan.next()));
         System.out.println("Possui audio?(Sim(1)/Nao(Qualquer numero))");
         livroEletronico.setAudioBook(scan.nextInt()==1?true:false);
         System.out.println("Insira o valor:");
-        livroEletronico.setValor(scan.nextDouble());
-        livroEletronico.setAutor(cadastrarAutorLivro());
+        livroEletronico.setValor(Double.parseDouble(scan.next()));
+        livroEletronico.setAutor(possuiAutor());
 
         listaLivrosEletronicos.add(livroEletronico);
         System.out.println("//////////");
     }
 
-    static Autor cadastrarAutorLivro(){
-        Autor autor=new Autor();
+    static Autor possuiAutor(){
         int possuiAutor=0;
         while(possuiAutor!=1 && possuiAutor!=2){
             System.out.println("Possui autor?(Sim(1)/Nao(2))");
@@ -319,15 +396,20 @@ public class Publicacao {
             }
         }
         if(possuiAutor==1){
-            System.out.println("Insira o nome do autor:");
-            scan.nextLine();
-            autor.setNomeAutor(scan.nextLine());
-            System.out.println("Insira a escola literaria do autor:");
-            autor.setEscolaLiteraria(scan.nextLine());
-            System.out.println("Insira o ano de nascimento:");
-            autor.setAnoNascimento(scan.nextInt());
-            return autor;
+            return(cadastrarAutorLivro());
         }
         return null;
+    }
+
+    static Autor cadastrarAutorLivro(){
+        Autor autor=new Autor();
+        System.out.println("Insira o nome do autor:");
+        scan.nextLine();
+        autor.setNomeAutor(scan.nextLine());
+        System.out.println("Insira a escola literaria do autor:");
+        autor.setEscolaLiteraria(scan.nextLine());
+        System.out.println("Insira o ano de nascimento:");
+        autor.setAnoNascimento(scan.nextInt());
+        return autor;
     }
 }
