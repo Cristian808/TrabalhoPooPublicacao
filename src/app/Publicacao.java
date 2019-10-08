@@ -20,31 +20,6 @@ public class Publicacao {
         
     static Scanner scan = new Scanner(System.in);
     public static void main(String[] args) throws Exception {
-        LivroFisico livroTop= new LivroFisico();
-        livroTop.setAltura(1);
-        livroTop.setAutor(null);
-        livroTop.setDescricao("abamnkf mkdamdkas0");
-        livroTop.setIsbnDez(1234567891);
-        livroTop.setLargura(1);
-        livroTop.setNome("Livro fisico top");
-        livroTop.setPaginas(1);
-        livroTop.setPeso(12);
-        livroTop.setValor(123);
-        listaLivrosFisicos.add(livroTop);
-        Autor autor = new Autor();
-        autor.setNomeAutor("Valesco");
-        autor.setEscolaLiteraria("Romantismo");
-        autor.setAnoNascimento(1875);
-        LivroEletronico livroTop1= new LivroEletronico();
-        livroTop1.setAutor(autor);
-        livroTop1.setDescricao("abamnkf mkdamdkas0");
-        livroTop1.setIsbnTreze(Long.parseLong("1236549874563"));
-        livroTop1.setAudioBook(false);
-        livroTop1.setNome("Livro eletronico top");
-        livroTop1.setPaginas(1);
-        livroTop1.setTamanhoMb(12);
-        livroTop1.setValor(123);
-        listaLivrosEletronicos.add(livroTop1);
         menu();
     }
 
@@ -106,8 +81,10 @@ public class Publicacao {
     static void reajusteValor(){
         int lista=0;
         int indiceLivro;
-        while ((lista != 1 || (lista == 1 && listaLivrosFisicos.size() == 0))
-                && (lista != 2 || (lista == 2 && listaLivrosEletronicos.size() == 0))) {
+        while (!(listaLivrosFisicos.size() == 0 && listaLivrosEletronicos.size() == 0)
+                ? (lista != 1 || (lista == 1 && listaLivrosFisicos.size() == 0))
+                        && (lista != 2 || (lista == 2 && listaLivrosEletronicos.size() == 0))
+                : false) {
             System.out.println(
                     "Deseja reajustar o valor do livro de qual lista?(Livros fisicos(1) Livros Eletronicos(2))");
             listarLivros();
@@ -117,6 +94,7 @@ public class Publicacao {
                 System.out.println("Insira um numero valido!!!");
             }
         }
+        if(listaLivrosFisicos.size() == 0 && listaLivrosEletronicos.size() == 0) System.out.println("Nao ha livros para serem reajustados");
         if(lista==1){
             for(boolean valido=false; valido==false;){
                 System.out.println("Insira o indice do livro");
