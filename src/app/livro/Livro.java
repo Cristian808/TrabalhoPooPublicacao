@@ -12,7 +12,7 @@ public abstract class Livro {
     private long isbnDez;
     private long isbnTreze;
 
-    private Autor autor = new Autor();
+    private Autor autor;
 
     public void mostrarInformacoesLivro(NumberFormat moeda){
         System.out.println("Nome: "+this.nome);
